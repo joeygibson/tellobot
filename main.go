@@ -36,22 +36,27 @@ func onLanding(s interface{}) {
 }
 
 func flightPlan(drone *tello.Driver) {
-	err := drone.StartVideo()
-	if err != nil {
-		logrus.WithField("err", err).Error("starting camera")
-	}
+	//err := drone.StartVideo()
+	//if err != nil {
+	//	logrus.WithField("err", err).Error("starting camera")
+	//}
 
-	err = drone.TakeOff()
+	logrus.Info("Taking off...")
+	err := drone.TakeOff()
 	if err != nil {
 		logrus.WithField("err", err).Error("take off")
 	}
 
-	err = drone.BackFlip()
-	if err != nil {
-		logrus.WithField("err", err).Error("back flip")
-	}
+	gobot.After(5*time.Second, func() {
+		logrus.Info("Back flipping...")
+		err = drone.BackFlip()
+		if err != nil {
+			logrus.WithField("err", err).Error("back flip")
+		}
+	})
 
 	gobot.After(5*time.Second, func() {
+		logrus.Info("Landing...")
 		err := drone.Land()
 		if err != nil {
 			logrus.WithField("err", err).Error("landing")
